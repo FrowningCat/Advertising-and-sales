@@ -1,791 +1,220 @@
 <!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>WB dashboard — Лист1</title>
-    <style>
-        :root {
-            --grid: #d9d9d9;
-            --text: #000;
-            --muted: #444;
-            --bg: #fff;
-        }
-        * { box-sizing: border-box; }
-        body {
-            margin: 0; padding: 28px; background: var(--bg); color: var(--text);
-            font-family: Arial, Helvetica, sans-serif; font-size: 14px;
-        }
-        .page { max-width: 1500px; margin: 0 auto; }
-        .top { margin-bottom: 20px; }
-        h1 { margin: 0 0 6px; font-size: 22px; font-weight: 700; }
-        .meta { color: var(--muted); font-size: 13px; }
-        .rate-badge {
-            display: inline-block; background: #eef6ff; color: #1a5fb4;
-            border: 1px solid #cfe3ff; border-radius: 4px; padding: 2px 8px;
-            font-size: 12px; font-weight: 400; vertical-align: middle;
-        }
-        .tables-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
-        .summary-block { min-width: 0; }
-        h2 { margin: 0 0 8px; text-align: center; font-size: 17px; font-weight: 700; }
-        .summary-table { width: 100%; border-collapse: collapse; table-layout: fixed; background: white; }
-        .summary-table th, .summary-table td {
-            border: 1px solid var(--grid); padding: 8px 9px; text-align: center;
-            vertical-align: middle; font-size: 14px; line-height: 1.15; white-space: nowrap;
-        }
-        .summary-table th { font-weight: 400; background: #fff; }
-        .summary-table th span { font-size: 11px; }
-        .summary-table td { font-weight: 700; }
-        .summary-table .date-cell, .summary-table .date-head, .summary-table tfoot td:first-child {
-            font-weight: 400; text-align: left; width: 104px;
-        }
-        .summary-table tfoot td { border-top: 3px solid #000; font-weight: 700; background: #fafafa; }
-        .summary-block:first-child { border-left: 2px solid #000; padding-left: 0; }
-        .summary-block:first-child .summary-table { border-left: 2px solid #000; }
-        .summary-block:last-child { border-left: 2px solid #000; border-right: 2px solid #000; padding-left: 0; padding-right: 0; }
-        .summary-block:last-child .summary-table { border-left: 2px solid #000; border-right: 2px solid #000; }
-        @media (max-width: 1200px) {
-            body { padding: 16px; }
-            .tables-wrap { grid-template-columns: 1fr; gap: 32px; }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WB dashboard — Лист1</title>
+<style>
+    :root {
+        --grid: #d9d9d9;
+        --text: #000;
+        --muted: #444;
+        --bg: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0; padding: 28px; background: var(--bg); color: var(--text);
+        font-family: Arial, Helvetica, sans-serif; font-size: 14px;
+    }
+    .page { max-width: 1500px; margin: 0 auto; }
+    .top { margin-bottom: 20px; }
+    h1 { margin: 0 0 6px; font-size: 22px; font-weight: 700; }
+    .meta { color: var(--muted); font-size: 13px; }
+    .meta.is-error { color: #b6402e; }
+    .rate-badge {
+        display: inline-block; background: #eef6ff; color: #1a5fb4;
+        border: 1px solid #cfe3ff; border-radius: 4px; padding: 2px 8px;
+        font-size: 12px; font-weight: 400; vertical-align: middle;
+    }
+    .tables-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    .summary-block { min-width: 0; }
+    h2 { margin: 0 0 8px; text-align: center; font-size: 17px; font-weight: 700; }
+    .summary-table { width: 100%; border-collapse: collapse; table-layout: fixed; background: white; }
+    .summary-table th, .summary-table td {
+        border: 1px solid var(--grid); padding: 8px 9px; text-align: center;
+        vertical-align: middle; font-size: 14px; line-height: 1.15; white-space: nowrap;
+    }
+    .summary-table th { font-weight: 400; background: #fff; }
+    .summary-table th span { font-size: 11px; }
+    .summary-table td { font-weight: 700; }
+    .summary-table .date-cell, .summary-table .date-head, .summary-table tfoot td:first-child {
+        font-weight: 400; text-align: left; width: 104px;
+    }
+    .summary-table tfoot td { border-top: 3px solid #000; font-weight: 700; background: #fafafa; }
+    .summary-block:first-child { border-left: 2px solid #000; padding-left: 0; }
+    .summary-block:first-child .summary-table { border-left: 2px solid #000; }
+    .summary-block:last-child { border-left: 2px solid #000; border-right: 2px solid #000; padding-left: 0; padding-right: 0; }
+    .summary-block:last-child .summary-table { border-left: 2px solid #000; border-right: 2px solid #000; }
+    .empty-note { text-align: center; color: var(--muted); font-style: italic; padding: 24px; }
+    @media (max-width: 1200px) {
+        body { padding: 16px; }
+        .tables-wrap { grid-template-columns: 1fr; gap: 32px; }
+    }
+</style>
 </head>
 <body>
     <main class="page">
         <div class="top">
             <h1>WB dashboard — Лист1</h1>
-            <div class="meta">Период: 12.06.2026 — 11.07.2026 (последние 30 дней) · Сформировано: 13.07.2026 10:09:29</div>
+            <div class="meta" id="metaLine">Подключение к Firestore…</div>
         </div>
-        <div class="tables-wrap">
-            
-    <section class="summary-block">
-        <h2>rus 633 sku <span class="rate-badge">% выкупа (скользящий, 14 дн.): 23–29%</span></h2>
-        <table class="summary-table">
-            <thead>
-                <tr>
-                    <th class="date-head"></th>
-                    <th>Заказали,<br>шт</th>
-                    <th>Заказали,<br>руб</th>
-                    <th>Продаж<br><span>(прогноз)</span> шт</th>
-                    <th>Продаж<br><span>(прогноз)</span> руб</th>
-                    <th>Реклама,<br>руб.</th>
-                    <th>ДРР <span>общ (по<br>продажам)</span></th>
-                    <th>Реклама на<br>одну<br>продажу, руб</th>
-                </tr>
-            </thead>
-            <tbody>
-                
-            <tr>
-                <td class="date-cell">12.06.2026</td>
-                <td>1 391</td>
-                <td>3 585 732</td>
-                <td>384</td>
-                <td>945 625</td>
-                <td>427 824</td>
-                <td>45%</td>
-                <td>1 114</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">13.06.2026</td>
-                <td>1 277</td>
-                <td>3 311 365</td>
-                <td>354</td>
-                <td>875 508</td>
-                <td>400 615</td>
-                <td>46%</td>
-                <td>1 133</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">14.06.2026</td>
-                <td>1 445</td>
-                <td>3 703 594</td>
-                <td>404</td>
-                <td>990 499</td>
-                <td>394 928</td>
-                <td>40%</td>
-                <td>978</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">15.06.2026</td>
-                <td>1 447</td>
-                <td>3 704 724</td>
-                <td>404</td>
-                <td>991 028</td>
-                <td>455 593</td>
-                <td>46%</td>
-                <td>1 129</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">16.06.2026</td>
-                <td>1 558</td>
-                <td>3 852 848</td>
-                <td>437</td>
-                <td>1 038 049</td>
-                <td>453 994</td>
-                <td>44%</td>
-                <td>1 039</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">17.06.2026</td>
-                <td>1 828</td>
-                <td>4 274 341</td>
-                <td>514</td>
-                <td>1 157 481</td>
-                <td>536 265</td>
-                <td>46%</td>
-                <td>1 044</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">18.06.2026</td>
-                <td>2 283</td>
-                <td>4 966 186</td>
-                <td>655</td>
-                <td>1 379 105</td>
-                <td>620 074</td>
-                <td>45%</td>
-                <td>947</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">19.06.2026</td>
-                <td>1 939</td>
-                <td>4 227 572</td>
-                <td>556</td>
-                <td>1 175 855</td>
-                <td>490 522</td>
-                <td>42%</td>
-                <td>882</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">20.06.2026</td>
-                <td>2 061</td>
-                <td>4 464 342</td>
-                <td>593</td>
-                <td>1 250 560</td>
-                <td>406 876</td>
-                <td>33%</td>
-                <td>686</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">21.06.2026</td>
-                <td>2 279</td>
-                <td>4 871 271</td>
-                <td>660</td>
-                <td>1 379 736</td>
-                <td>399 560</td>
-                <td>29%</td>
-                <td>605</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">22.06.2026</td>
-                <td>2 467</td>
-                <td>5 108 587</td>
-                <td>717</td>
-                <td>1 455 814</td>
-                <td>411 698</td>
-                <td>28%</td>
-                <td>575</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">23.06.2026</td>
-                <td>2 379</td>
-                <td>4 985 777</td>
-                <td>689</td>
-                <td>1 417 393</td>
-                <td>390 094</td>
-                <td>28%</td>
-                <td>566</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">24.06.2026</td>
-                <td>1 991</td>
-                <td>4 250 853</td>
-                <td>572</td>
-                <td>1 196 800</td>
-                <td>346 627</td>
-                <td>29%</td>
-                <td>606</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">25.06.2026</td>
-                <td>1 887</td>
-                <td>4 089 769</td>
-                <td>539</td>
-                <td>1 145 494</td>
-                <td>361 095</td>
-                <td>32%</td>
-                <td>670</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">26.06.2026</td>
-                <td>1 869</td>
-                <td>3 921 962</td>
-                <td>533</td>
-                <td>1 098 357</td>
-                <td>333 727</td>
-                <td>30%</td>
-                <td>626</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">27.06.2026</td>
-                <td>1 654</td>
-                <td>3 507 502</td>
-                <td>471</td>
-                <td>981 374</td>
-                <td>288 600</td>
-                <td>29%</td>
-                <td>613</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">28.06.2026</td>
-                <td>1 837</td>
-                <td>3 932 099</td>
-                <td>525</td>
-                <td>1 102 594</td>
-                <td>288 334</td>
-                <td>26%</td>
-                <td>549</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">29.06.2026</td>
-                <td>1 936</td>
-                <td>4 186 670</td>
-                <td>556</td>
-                <td>1 179 834</td>
-                <td>302 720</td>
-                <td>26%</td>
-                <td>545</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">30.06.2026</td>
-                <td>2 232</td>
-                <td>4 696 372</td>
-                <td>637</td>
-                <td>1 316 811</td>
-                <td>379 262</td>
-                <td>29%</td>
-                <td>595</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">01.07.2026</td>
-                <td>2 794</td>
-                <td>5 386 326</td>
-                <td>797</td>
-                <td>1 507 587</td>
-                <td>397 036</td>
-                <td>26%</td>
-                <td>498</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">02.07.2026</td>
-                <td>2 766</td>
-                <td>5 341 492</td>
-                <td>785</td>
-                <td>1 489 826</td>
-                <td>379 216</td>
-                <td>25%</td>
-                <td>483</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">03.07.2026</td>
-                <td>5 709</td>
-                <td>7 734 400</td>
-                <td>1 650</td>
-                <td>2 172 753</td>
-                <td>431 044</td>
-                <td>20%</td>
-                <td>261</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">04.07.2026</td>
-                <td>3 166</td>
-                <td>5 720 275</td>
-                <td>914</td>
-                <td>1 607 213</td>
-                <td>350 901</td>
-                <td>22%</td>
-                <td>384</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">05.07.2026</td>
-                <td>3 146</td>
-                <td>5 789 757</td>
-                <td>913</td>
-                <td>1 633 069</td>
-                <td>331 384</td>
-                <td>20%</td>
-                <td>363</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">06.07.2026</td>
-                <td>3 078</td>
-                <td>5 647 347</td>
-                <td>898</td>
-                <td>1 601 305</td>
-                <td>408 617</td>
-                <td>26%</td>
-                <td>455</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">07.07.2026</td>
-                <td>3 527</td>
-                <td>6 420 356</td>
-                <td>1 024</td>
-                <td>1 812 447</td>
-                <td>483 394</td>
-                <td>27%</td>
-                <td>472</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">08.07.2026</td>
-                <td>3 838</td>
-                <td>6 988 653</td>
-                <td>1 102</td>
-                <td>1 951 790</td>
-                <td>476 189</td>
-                <td>24%</td>
-                <td>432</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">09.07.2026</td>
-                <td>4 094</td>
-                <td>7 463 096</td>
-                <td>1 143</td>
-                <td>2 029 957</td>
-                <td>418 738</td>
-                <td>21%</td>
-                <td>366</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">10.07.2026</td>
-                <td>5 597</td>
-                <td>10 182 939</td>
-                <td>1 459</td>
-                <td>2 587 489</td>
-                <td>387 233</td>
-                <td>15%</td>
-                <td>265</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">11.07.2026</td>
-                <td>6 059</td>
-                <td>10 961 314</td>
-                <td>1 419</td>
-                <td>2 503 236</td>
-                <td>340 386</td>
-                <td>14%</td>
-                <td>240</td>
-            </tr>
-        
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td>Итого</td>
-                    <td>79 534</td>
-                    <td>157 277 521</td>
-                    <td>22 302</td>
-                    <td>42 974 587</td>
-                    <td>12 092 545</td>
-                    <td>28%</td>
-                    <td>542</td>
-                </tr>
-            </tfoot>
-        </table>
-    </section>
-    
-            
-    <section class="summary-block">
-        <h2>все sku <span class="rate-badge">% выкупа (скользящий, 14 дн.): 23–28%</span></h2>
-        <table class="summary-table">
-            <thead>
-                <tr>
-                    <th class="date-head"></th>
-                    <th>Заказали,<br>шт</th>
-                    <th>Заказали,<br>руб</th>
-                    <th>Продаж<br><span>(прогноз)</span> шт</th>
-                    <th>Продаж<br><span>(прогноз)</span> руб</th>
-                    <th>Реклама,<br>руб.</th>
-                    <th>ДРР <span>общ (по<br>продажам)</span></th>
-                    <th>Реклама на<br>одну<br>продажу, руб</th>
-                </tr>
-            </thead>
-            <tbody>
-                
-            <tr>
-                <td class="date-cell">12.06.2026</td>
-                <td>47 338</td>
-                <td>113 499 412</td>
-                <td>12 682</td>
-                <td>29 398 887</td>
-                <td>3 349 234</td>
-                <td>11%</td>
-                <td>264</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">13.06.2026</td>
-                <td>42 910</td>
-                <td>105 050 408</td>
-                <td>11 558</td>
-                <td>27 320 969</td>
-                <td>3 152 904</td>
-                <td>12%</td>
-                <td>273</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">14.06.2026</td>
-                <td>44 871</td>
-                <td>110 397 691</td>
-                <td>12 169</td>
-                <td>28 897 725</td>
-                <td>3 273 118</td>
-                <td>11%</td>
-                <td>269</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">15.06.2026</td>
-                <td>43 744</td>
-                <td>106 627 844</td>
-                <td>11 916</td>
-                <td>28 030 731</td>
-                <td>3 259 337</td>
-                <td>12%</td>
-                <td>274</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">16.06.2026</td>
-                <td>45 354</td>
-                <td>108 594 375</td>
-                <td>12 423</td>
-                <td>28 684 045</td>
-                <td>3 297 259</td>
-                <td>11%</td>
-                <td>265</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">17.06.2026</td>
-                <td>44 249</td>
-                <td>105 665 755</td>
-                <td>12 204</td>
-                <td>28 113 189</td>
-                <td>3 328 629</td>
-                <td>12%</td>
-                <td>273</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">18.06.2026</td>
-                <td>43 519</td>
-                <td>102 032 976</td>
-                <td>12 061</td>
-                <td>27 296 479</td>
-                <td>3 316 630</td>
-                <td>12%</td>
-                <td>275</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">19.06.2026</td>
-                <td>40 159</td>
-                <td>95 561 449</td>
-                <td>11 171</td>
-                <td>25 647 234</td>
-                <td>3 209 424</td>
-                <td>13%</td>
-                <td>287</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">20.06.2026</td>
-                <td>41 043</td>
-                <td>98 106 521</td>
-                <td>11 435</td>
-                <td>26 361 639</td>
-                <td>3 074 458</td>
-                <td>12%</td>
-                <td>269</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">21.06.2026</td>
-                <td>45 261</td>
-                <td>107 864 399</td>
-                <td>12 658</td>
-                <td>29 106 351</td>
-                <td>3 175 911</td>
-                <td>11%</td>
-                <td>251</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">22.06.2026</td>
-                <td>44 929</td>
-                <td>106 275 773</td>
-                <td>12 576</td>
-                <td>28 693 282</td>
-                <td>3 194 978</td>
-                <td>11%</td>
-                <td>254</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">23.06.2026</td>
-                <td>45 866</td>
-                <td>108 959 323</td>
-                <td>12 855</td>
-                <td>29 462 452</td>
-                <td>3 268 912</td>
-                <td>11%</td>
-                <td>254</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">24.06.2026</td>
-                <td>41 856</td>
-                <td>98 231 577</td>
-                <td>11 645</td>
-                <td>26 347 979</td>
-                <td>2 959 411</td>
-                <td>11%</td>
-                <td>254</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">25.06.2026</td>
-                <td>38 354</td>
-                <td>89 171 547</td>
-                <td>10 547</td>
-                <td>23 640 599</td>
-                <td>2 804 651</td>
-                <td>12%</td>
-                <td>266</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">26.06.2026</td>
-                <td>35 343</td>
-                <td>79 750 395</td>
-                <td>9 708</td>
-                <td>21 112 553</td>
-                <td>2 584 456</td>
-                <td>12%</td>
-                <td>266</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">27.06.2026</td>
-                <td>33 289</td>
-                <td>75 448 612</td>
-                <td>9 140</td>
-                <td>19 978 603</td>
-                <td>2 638 049</td>
-                <td>13%</td>
-                <td>289</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">28.06.2026</td>
-                <td>36 423</td>
-                <td>82 437 664</td>
-                <td>9 990</td>
-                <td>21 797 810</td>
-                <td>2 652 398</td>
-                <td>12%</td>
-                <td>266</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">29.06.2026</td>
-                <td>37 227</td>
-                <td>83 546 850</td>
-                <td>10 208</td>
-                <td>22 087 978</td>
-                <td>2 599 271</td>
-                <td>12%</td>
-                <td>255</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">30.06.2026</td>
-                <td>38 858</td>
-                <td>86 482 643</td>
-                <td>10 656</td>
-                <td>22 876 379</td>
-                <td>2 505 937</td>
-                <td>11%</td>
-                <td>235</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">01.07.2026</td>
-                <td>55 742</td>
-                <td>106 768 295</td>
-                <td>15 318</td>
-                <td>28 289 058</td>
-                <td>2 826 695</td>
-                <td>10%</td>
-                <td>185</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">02.07.2026</td>
-                <td>51 083</td>
-                <td>101 862 663</td>
-                <td>14 083</td>
-                <td>27 052 921</td>
-                <td>2 575 334</td>
-                <td>10%</td>
-                <td>183</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">03.07.2026</td>
-                <td>54 043</td>
-                <td>101 968 215</td>
-                <td>14 871</td>
-                <td>27 021 173</td>
-                <td>2 476 962</td>
-                <td>9%</td>
-                <td>167</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">04.07.2026</td>
-                <td>46 301</td>
-                <td>91 782 512</td>
-                <td>12 722</td>
-                <td>24 307 208</td>
-                <td>2 248 747</td>
-                <td>9%</td>
-                <td>177</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">05.07.2026</td>
-                <td>49 065</td>
-                <td>98 131 978</td>
-                <td>13 537</td>
-                <td>26 072 187</td>
-                <td>2 246 216</td>
-                <td>9%</td>
-                <td>166</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">06.07.2026</td>
-                <td>46 970</td>
-                <td>93 310 426</td>
-                <td>13 029</td>
-                <td>24 905 838</td>
-                <td>2 421 429</td>
-                <td>10%</td>
-                <td>186</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">07.07.2026</td>
-                <td>50 774</td>
-                <td>99 326 608</td>
-                <td>14 052</td>
-                <td>26 451 615</td>
-                <td>2 416 693</td>
-                <td>9%</td>
-                <td>172</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">08.07.2026</td>
-                <td>52 067</td>
-                <td>101 793 033</td>
-                <td>14 251</td>
-                <td>26 840 222</td>
-                <td>2 381 287</td>
-                <td>9%</td>
-                <td>167</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">09.07.2026</td>
-                <td>53 229</td>
-                <td>103 688 169</td>
-                <td>14 282</td>
-                <td>26 877 390</td>
-                <td>1 887 077</td>
-                <td>7%</td>
-                <td>132</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">10.07.2026</td>
-                <td>74 294</td>
-                <td>141 492 484</td>
-                <td>18 692</td>
-                <td>34 543 005</td>
-                <td>1 879 125</td>
-                <td>5%</td>
-                <td>101</td>
-            </tr>
-        
-            <tr>
-                <td class="date-cell">11.07.2026</td>
-                <td>79 189</td>
-                <td>150 355 980</td>
-                <td>18 021</td>
-                <td>33 356 092</td>
-                <td>1 513 391</td>
-                <td>5%</td>
-                <td>84</td>
-            </tr>
-        
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td>Итого</td>
-                    <td>1 403 350</td>
-                    <td>3 054 185 577</td>
-                    <td>380 460</td>
-                    <td>800 571 597</td>
-                    <td>82 517 925</td>
-                    <td>10%</td>
-                    <td>217</td>
-                </tr>
-            </tfoot>
-        </table>
-    </section>
-    
+        <div class="tables-wrap" id="tablesWrap">
+            <p class="empty-note">Загрузка данных…</p>
         </div>
     </main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  const FIREBASE_CONFIG = {"apiKey": "AIzaSyCbiW-rv05DdI_Y5a5WtCCyuzA8BgjD6rk", "authDomain": "task-ebb73.firebaseapp.com", "projectId": "task-ebb73", "storageBucket": "task-ebb73.firebasestorage.app", "messagingSenderId": "1031614791847", "appId": "1:1031614791847:web:a4d2c9e0b4299af979db82"};
+  const ROWS_COLLECTION = "wb_dashboard_rows";
+  const META_DOC_PATH = "wb_dashboard_meta/latest";
+  const TITLE_OUR = "rus 633 sku";
+  const TITLE_ALL = "все sku";
+
+  firebase.initializeApp(FIREBASE_CONFIG);
+  const db = firebase.firestore();
+
+  function fmtInt(n){
+    return Math.round(n).toLocaleString("ru-RU").replace(/,/g, " ");
+  }
+  function fmtPercent(num, den){
+    if(!den) return "0%";
+    return Math.round((num/den)*100) + "%";
+  }
+  function safeDiv(num, den){
+    if(!den) return 0;
+    return num/den;
+  }
+  function fmtDate(str){
+    // str: YYYY-MM-DD
+    const parts = str.split("-");
+    if(parts.length !== 3) return str;
+    return parts[2] + "." + parts[1] + "." + parts[0];
+  }
+
+  function buildTable(title, rows, modeKey){
+    let bodyRows = "";
+    const totals = { order_count:0, order_sum:0, buyout_count:0, buyout_sum:0, ads_sum:0 };
+    const rateSamples = [];
+
+    rows.forEach(function(row){
+      const m = row[modeKey];
+      if(!m) return;
+      totals.order_count += m.order_count;
+      totals.order_sum   += m.order_sum;
+      totals.buyout_count+= m.buyout_count;
+      totals.buyout_sum  += m.buyout_sum;
+      totals.ads_sum      += m.ads_sum;
+      rateSamples.push(m.buyout_rate || 0);
+
+      const drr = fmtPercent(m.ads_sum, m.buyout_sum);
+      const adsPerSale = fmtInt(safeDiv(m.ads_sum, m.buyout_count));
+
+      bodyRows +=
+        '<tr>' +
+          '<td class="date-cell">' + fmtDate(row.date) + '</td>' +
+          '<td>' + fmtInt(m.order_count) + '</td>' +
+          '<td>' + fmtInt(m.order_sum) + '</td>' +
+          '<td>' + fmtInt(m.buyout_count) + '</td>' +
+          '<td>' + fmtInt(m.buyout_sum) + '</td>' +
+          '<td>' + fmtInt(m.ads_sum) + '</td>' +
+          '<td>' + drr + '</td>' +
+          '<td>' + adsPerSale + '</td>' +
+        '</tr>';
+    });
+
+    const totalDrr = fmtPercent(totals.ads_sum, totals.buyout_sum);
+    const totalAdsPerSale = fmtInt(safeDiv(totals.ads_sum, totals.buyout_count));
+
+    let rateLabel = "—";
+    if(rateSamples.length){
+      const rateMin = Math.min.apply(null, rateSamples) * 100;
+      const rateMax = Math.max.apply(null, rateSamples) * 100;
+      rateLabel = Math.round(rateMin) === Math.round(rateMax)
+        ? Math.round(rateMin) + "%"
+        : Math.round(rateMin) + "–" + Math.round(rateMax) + "%";
+    }
+
+    return (
+      '<section class="summary-block">' +
+        '<h2>' + title + ' <span class="rate-badge" id="rateBadge_' + modeKey + '">% выкупа (скользящий): ' + rateLabel + '</span></h2>' +
+        '<table class="summary-table">' +
+          '<thead><tr>' +
+            '<th class="date-head"></th>' +
+            '<th>Заказали,<br>шт</th>' +
+            '<th>Заказали,<br>руб</th>' +
+            '<th>Продаж<br><span>(прогноз)</span> шт</th>' +
+            '<th>Продаж<br><span>(прогноз)</span> руб</th>' +
+            '<th>Реклама,<br>руб.</th>' +
+            '<th>ДРР <span>общ (по<br>продажам)</span></th>' +
+            '<th>Реклама на<br>одну<br>продажу, руб</th>' +
+          '</tr></thead>' +
+          '<tbody>' + bodyRows + '</tbody>' +
+          '<tfoot><tr>' +
+            '<td>Итого</td>' +
+            '<td>' + fmtInt(totals.order_count) + '</td>' +
+            '<td>' + fmtInt(totals.order_sum) + '</td>' +
+            '<td>' + fmtInt(totals.buyout_count) + '</td>' +
+            '<td>' + fmtInt(totals.buyout_sum) + '</td>' +
+            '<td>' + fmtInt(totals.ads_sum) + '</td>' +
+            '<td>' + totalDrr + '</td>' +
+            '<td>' + totalAdsPerSale + '</td>' +
+          '</tr></tfoot>' +
+        '</table>' +
+      '</section>'
+    );
+  }
+
+  function render(rows){
+    const wrap = document.getElementById("tablesWrap");
+    if(!rows.length){
+      wrap.innerHTML = '<p class="empty-note">Нет данных за период. Проверь, что push_dashboard_to_firebase.py запускался.</p>';
+      return;
+    }
+    rows.sort(function(a,b){ return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0); });
+    wrap.innerHTML =
+      buildTable(TITLE_OUR, rows, "our") +
+      buildTable(TITLE_ALL, rows, "all");
+  }
+
+  function setMeta(text, isError){
+    const el = document.getElementById("metaLine");
+    el.textContent = text;
+    el.classList.toggle("is-error", !!isError);
+  }
+
+  let latestRows = [];
+  let metaInfo = null;
+
+  function refreshMetaLine(){
+    if(!metaInfo){
+      setMeta("Обновлено: " + new Date().toLocaleString("ru-RU"));
+      return;
+    }
+    const periodText = fmtDate(metaInfo.period_from) + " — " + fmtDate(metaInfo.period_to);
+    let generatedText = "—";
+    if(metaInfo.generated_at && metaInfo.generated_at.toDate){
+      generatedText = metaInfo.generated_at.toDate().toLocaleString("ru-RU");
+    }
+    setMeta("Период: " + periodText + " (последние 30 дней) · Обновлено: " + generatedText);
+  }
+
+  db.collection(ROWS_COLLECTION).onSnapshot(function(snapshot){
+    latestRows = snapshot.docs.map(function(doc){ return doc.data(); });
+    render(latestRows);
+    refreshMetaLine();
+  }, function(error){
+    console.error("Firestore sync error:", error);
+    setMeta("Нет доступа к данным — проверь правила Firestore (Rules)", true);
+  });
+
+  db.doc(META_DOC_PATH).onSnapshot(function(doc){
+    metaInfo = doc.exists ? doc.data() : null;
+    refreshMetaLine();
+  }, function(error){
+    console.error("Firestore meta sync error:", error);
+  });
+</script>
 </body>
 </html>
